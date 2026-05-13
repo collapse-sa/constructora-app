@@ -16,8 +16,9 @@
   --font-body:'Barlow',sans-serif;
   --font-cond:'Barlow Condensed',sans-serif;
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);color:var(--text);background:#fff;overflow-x:hidden}
+html{scroll-behavior:smooth;width:100%;max-width:100%;overflow-x:hidden}
+body{font-family:var(--font-body);color:var(--text);background:#fff;width:100%;max-width:100%;overflow-x:hidden}
+#root,.app,main{width:100%;max-width:100%;overflow-x:hidden}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#111}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
@@ -314,6 +315,33 @@ body{font-family:var(--font-body);color:var(--text);background:#fff;overflow-x:h
   .contact-form{padding:28px 20px}
   .hero-btns{flex-direction:column}
   .btn-primary,.btn-outline{text-align:center}
+}
+
+@media(max-width:768px){
+  *{box-sizing:border-box}
+  img,iframe,.calendly-inline-widget{max-width:100%}
+  section,.container,.hero,.navbar,.footer{max-width:100%;overflow-x:hidden}
+  .mobile-menu,.hero-video,.hero-overlay,.hero-content,.hero-stats,.services-grid,.projects-grid,.contact-inner,.schedule-inner,.footer-top{max-width:100%;overflow-x:hidden}
+  .schedule-calendly,.schedule-calendly iframe,.schedule-calendly .calendly-inline-widget{min-width:0;min-height:720px;height:720px;width:100%;max-width:100%}
+}
+
+@media(max-width:390px){
+  .nav-inner{height:68px}
+  .mobile-menu{top:68px}
+  .hero{height:100svh;min-height:667px;align-items:flex-start;padding-bottom:122px}
+  .hero-content{padding:92px 6% 0;max-width:none}
+  .hero-badge{font-size:9px;letter-spacing:1.2px;padding:6px 9px;margin-bottom:16px;gap:6px}
+  .hero-badge::before{width:6px;height:6px}
+  .hero h1{font-size:clamp(2.45rem,11vw,3.1rem);line-height:.95;letter-spacing:1px;margin-bottom:14px}
+  .hero-sub{font-size:13.5px;line-height:1.45;margin-bottom:18px;max-width:100%}
+  .hero-btns{gap:10px}
+  .hero .btn-primary,.hero .btn-outline{width:100%;padding:13px 22px;font-size:12px}
+  .hero-stats{left:6%;right:76px;bottom:82px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px;padding-top:14px}
+  .hero-stat{gap:8px;align-items:flex-start}
+  .hero-stat-num{font-size:27px}
+  .hero-stat-label{font-size:10px;line-height:1.15;letter-spacing:.7px}
+  .wa-btn{width:48px;height:48px;right:14px;bottom:14px}
+  .wa-btn svg{width:25px;height:25px}
 }
 
 @media (prefers-reduced-motion: reduce){

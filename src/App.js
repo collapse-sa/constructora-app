@@ -72,6 +72,7 @@ const projects = [
 ];
 
 const navItems = ['Inicio', 'Nosotros', 'Servicios', 'Proyectos', 'Contacto'];
+const calendlyUrl = 'https://calendly.com/collapse-samty/30min?primary_color=ff6b1a';
 
 const aboutStats = [
   { num: '18+', label: <>Años de<br />experiencia</> },
@@ -105,6 +106,9 @@ function App() {
   const [isOpeningWhatsapp, setIsOpeningWhatsapp] = useState(false);
   const contactSuccessTimeoutRef = useRef(null);
   const whatsappButtonTimeoutRef = useRef(null);
+  const mobileMenuScrollTimeoutRef = useRef(null);
+  const calendlyRefreshTimeoutRef = useRef(null);
+  const calendlyContainerRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -216,10 +220,66 @@ function App() {
     return () => {
       clearTimeout(contactSuccessTimeoutRef.current);
       clearTimeout(whatsappButtonTimeoutRef.current);
+      clearTimeout(mobileMenuScrollTimeoutRef.current);
+      clearTimeout(calendlyRefreshTimeoutRef.current);
     };
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
   const closeMenu = () => setMenuOpen(false);
+  const refreshCalendly = () => {
+    const container = calendlyContainerRef.current;
+    if (!container) return;
+
+    window.dispatchEvent(new Event('resize'));
+
+    const iframe = container.querySelector('iframe');
+    const shouldRebuild = window.Calendly && (!iframe || iframe.offsetHeight < 300);
+
+    if (!shouldRebuild) return;
+
+    container.innerHTML = '';
+    const nextWidget = document.createElement('div');
+    nextWidget.className = 'calendly-inline-widget';
+    nextWidget.title = 'Agenda una cita';
+    container.appendChild(nextWidget);
+    window.Calendly.initInlineWidget({
+      url: calendlyUrl,
+      parentElement: nextWidget,
+    });
+  };
+
+  const handleMobileNavClick = (event, item) => {
+    event.preventDefault();
+    const link = event.currentTarget;
+    if (link.dataset.navigating === 'true') return;
+    link.dataset.navigating = 'true';
+    setMenuOpen(false);
+
+    clearTimeout(mobileMenuScrollTimeoutRef.current);
+    clearTimeout(calendlyRefreshTimeoutRef.current);
+
+    const sectionId = item.toLowerCase();
+    mobileMenuScrollTimeoutRef.current = setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      if (sectionId === 'contacto' || sectionId === 'agendar') {
+        calendlyRefreshTimeoutRef.current = setTimeout(refreshCalendly, 650);
+      }
+      link.dataset.navigating = 'false';
+    }, 300);
+  };
+
   const whatsappMessage = encodeURIComponent(
     'Hola, encontré su sitio web en Google y me gustaría recibir más información sobre sus servicios.'
   );
@@ -293,7 +353,7 @@ function App() {
 
       <div className={`mobile-menu${menuOpen ? ' open' : ''}`} id="mobileMenu">
         {navItems.map((item) => (
-          <a className={activeSection === item.toLowerCase() ? 'active' : ''} key={item} href={`#${item.toLowerCase()}`} onClick={closeMenu}>{item}</a>
+          <a className={activeSection === item.toLowerCase() ? 'active' : ''} key={item} href={`#${item.toLowerCase()}`} onPointerDown={(event) => handleMobileNavClick(event, item)} onClick={(event) => handleMobileNavClick(event, item)}>{item}</a>
         ))}
         <a href="tel:+528125838187" onClick={closeMenu}>(81) 2583-8187</a>
       </div>
@@ -473,10 +533,10 @@ function App() {
             </div>
           </div>
 
-          <div className="schedule-calendly reveal-right">
+          <div className="schedule-calendly reveal-right" ref={calendlyContainerRef}>
             <div
               className="calendly-inline-widget"
-              data-url="https://calendly.com/collapse-samty/30min?primary_color=ff6b1a"
+              data-url={calendlyUrl}
               title="Agenda una cita"
             ></div>
           </div>
