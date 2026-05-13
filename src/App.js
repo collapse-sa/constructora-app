@@ -159,6 +159,19 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (document.querySelector('script[src="https://assets.calendly.com/assets/external/widget.js"]')) {
+      return undefined;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return undefined;
+  }, []);
+
   const closeMenu = () => setMenuOpen(false);
   const whatsappMessage = encodeURIComponent(
     'Hola, encontré su sitio web en Google y me gustaría recibir más información sobre sus servicios.'
@@ -325,17 +338,6 @@ function App() {
         </div>
       </section>
 
-      <section className="cta-banner">
-        <div className="cta-bg"></div>
-        <div className="cta-overlay"></div>
-        <div className="cta-content reveal-left">
-          <div className="section-tag">¿Tienes un proyecto?</div>
-          <h2>Nos encargamos de que cada proyecto fluya <span>sin complicaciones</span></h2>
-          <p>Desde la asesoría inicial hasta la entrega final, nuestro equipo garantiza resultados con los más altos estándares de la industria.</p>
-          <a href="#contacto" className="btn-primary">Contáctanos hoy</a>
-        </div>
-      </section>
-
       <section className="process">
         <div className="process-header reveal">
           <div className="section-tag process-tag">Cómo trabajamos</div>
@@ -354,6 +356,43 @@ function App() {
               <p>{text}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="cta-banner">
+        <div className="cta-bg"></div>
+        <div className="cta-overlay"></div>
+        <div className="cta-content reveal-left">
+          <div className="section-tag">¿Tienes un proyecto?</div>
+          <h2>Nos encargamos de que cada proyecto fluya <span>sin complicaciones</span></h2>
+          <p>Desde la asesoría inicial hasta la entrega final, nuestro equipo garantiza resultados con los más altos estándares de la industria.</p>
+          <div className="cta-actions">
+            <a href="#contacto" className="btn-primary">Contáctanos hoy</a>
+            <a href="#agendar" className="btn-outline">Agendar cita</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="schedule-section" id="agendar">
+        <div className="schedule-inner">
+          <div className="schedule-content reveal-left">
+            <div className="section-tag">Agenda una cita</div>
+            <h2 className="section-title">Hablemos de tu próximo <span>proyecto</span></h2>
+            <p>Selecciona el horario que mejor se adapte a ti y agenda una asesoría inicial con nuestro equipo. Revisaremos tus necesidades, alcance del proyecto y próximos pasos.</p>
+            <div className="schedule-points">
+              <span>Asesoría inicial sin compromiso</span>
+              <span>Revisión general de tu proyecto</span>
+              <span>Atención personalizada</span>
+            </div>
+          </div>
+
+          <div className="schedule-calendly reveal-right">
+            <div
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/collapse-samty/30min?primary_color=ff6b1a"
+              title="Agenda una cita"
+            ></div>
+          </div>
         </div>
       </section>
 
