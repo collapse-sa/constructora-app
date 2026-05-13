@@ -73,6 +73,8 @@ const projects = [
 
 const navItems = ['Inicio', 'Nosotros', 'Servicios', 'Proyectos', 'Contacto'];
 const calendlyUrl = 'https://calendly.com/collapse-samty/30min?primary_color=ff6b1a';
+const mapsUrl = 'https://maps.app.goo.gl/BdXc5yH6o7VCgyi9A';
+const mapsEmbedUrl = 'https://www.google.com/maps?q=Av.+Constitucion+450,+Monterrey,+Nuevo+Leon,+Mexico&output=embed';
 
 const aboutStats = [
   { num: '18+', label: <>Años de<br />experiencia</> },
@@ -226,17 +228,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!menuOpen) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.classList.toggle('menu-open', menuOpen);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.classList.remove('menu-open');
     };
   }, [menuOpen]);
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    document.body.classList.remove('menu-open');
+  };
   const refreshCalendly = () => {
     const container = calendlyContainerRef.current;
     if (!container) return;
@@ -264,7 +266,7 @@ function App() {
     const link = event.currentTarget;
     if (link.dataset.navigating === 'true') return;
     link.dataset.navigating = 'true';
-    setMenuOpen(false);
+    closeMenu();
 
     clearTimeout(mobileMenuScrollTimeoutRef.current);
     clearTimeout(calendlyRefreshTimeoutRef.current);
@@ -581,6 +583,26 @@ function App() {
             {contactSuccess && <p className="form-success" role="status">{contactSuccess}</p>}
             {contactError && <p className="form-error" role="alert">{contactError}</p>}
           </form>
+        </div>
+      </section>
+
+      <section className="location-section" id="ubicacion">
+        <div className="location-inner">
+          <div className="location-content fade-up">
+            <div className="section-tag">UBICACIÓN</div>
+            <h2 className="section-title">Visítanos en <span>Monterrey</span></h2>
+            <p>Estamos ubicados en Monterrey, N.L. donde atendemos proyectos industriales, comerciales y urbanos para clientes de toda la región.</p>
+            <a className="btn-primary location-btn" href={mapsUrl} target="_blank" rel="noreferrer" aria-label="Abrir Google Maps para llegar a EDIFICA">Cómo llegar</a>
+          </div>
+          <div className="location-map fade-up">
+            <iframe
+              src={mapsEmbedUrl}
+              title="Ubicación de EDIFICA en Monterrey"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            ></iframe>
+          </div>
         </div>
       </section>
 
