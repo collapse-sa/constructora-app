@@ -5,7 +5,7 @@ const services = [
   {
     num: '01',
     title: 'Obra Civil',
-    img: 'https://images.unsplash.com/photo-1571987502951-3c8046e09fa2?w=600&q=75',
+    img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&q=75',
     alt: 'Obra civil',
     text: 'Ejecución de obra civil desde cimentación hasta acabados, con control riguroso de calidad y cumplimiento de normativas.',
     icon: (
@@ -46,7 +46,7 @@ const services = [
 
 const projects = [
   {
-    img: 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=900&q=80',
+    img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80',
     alt: 'General Motors',
     cat: 'Construcción Industrial',
     name: <>General Motors<br />Planta Silao</>,
@@ -73,6 +73,12 @@ const projects = [
 
 const navItems = ['Inicio', 'Nosotros', 'Servicios', 'Proyectos', 'Contacto'];
 
+const aboutStats = [
+  { num: '18+', label: <>Años de<br />experiencia</> },
+  { num: '285', label: <>Proyectos<br />entregados</> },
+  { num: '21', label: <>Estados con<br />presencia</> },
+];
+
 function Logo() {
   return (
     <a href="#" className="logo">
@@ -91,6 +97,8 @@ function PhoneIcon() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [aboutStatIndex, setAboutStatIndex] = useState(0);
+  const [aboutBadgeLeaving, setAboutBadgeLeaving] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -113,6 +121,22 @@ function App() {
 
     document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let exitTimeout;
+    const interval = setInterval(() => {
+      setAboutBadgeLeaving(true);
+      exitTimeout = setTimeout(() => {
+        setAboutStatIndex((current) => (current + 1) % aboutStats.length);
+        setAboutBadgeLeaving(false);
+      }, 360);
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(exitTimeout);
+    };
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
@@ -190,8 +214,10 @@ function App() {
           <div className="about-img-wrap fade-up">
             <img className="about-img" src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=80" alt="Construcción" />
             <div className="about-badge">
-              <div className="about-badge-num">18+</div>
-              <div className="about-badge-text">Años de<br />experiencia</div>
+              <div key={aboutStatIndex} className={`about-badge-content${aboutBadgeLeaving ? ' leaving' : ''}`}>
+                <div className="about-badge-num">{aboutStats[aboutStatIndex].num}</div>
+                <div className="about-badge-text">{aboutStats[aboutStatIndex].label}</div>
+              </div>
             </div>
           </div>
           <div className="fade-up">
@@ -236,7 +262,7 @@ function App() {
             <div className="service-card fade-up" key={service.num}>
               <div className="service-card-num">{service.num}</div>
               <div className="service-card-img">
-                <img src={service.img} alt={service.alt} />
+                <ImageWithFallback src={service.img} alt={service.alt} />
               </div>
               <div className="service-card-body">
                 <div className="service-icon">{service.icon}</div>
@@ -260,7 +286,7 @@ function App() {
         <div className="projects-grid">
           {projects.map((project) => (
             <div className="project-card fade-up" key={project.cat}>
-              <img className="project-card-img" src={project.img} alt={project.alt} />
+              <ImageWithFallback className="project-card-img" src={project.img} alt={project.alt} />
               <div className="project-overlay"></div>
               <div className="project-content">
                 <div className="project-cat">{project.cat}</div>
@@ -390,6 +416,28 @@ function ContactDetail({ label, value, icon }) {
         <div className="contact-detail-val">{value}</div>
       </div>
     </div>
+  );
+}
+
+function ImageWithFallback({ src, alt, className = '' }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return (
+      <div className={`${className} image-fallback`} role="img" aria-label={alt}>
+        <span>{alt}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      className={className}
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setHasError(true)}
+    />
   );
 }
 
