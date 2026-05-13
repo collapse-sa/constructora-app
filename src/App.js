@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 const services = [
@@ -100,6 +100,11 @@ function App() {
   const [activeSection, setActiveSection] = useState('inicio');
   const [aboutStatIndex, setAboutStatIndex] = useState(0);
   const [aboutBadgeLeaving, setAboutBadgeLeaving] = useState(false);
+  const [contactError, setContactError] = useState('');
+  const [contactSuccess, setContactSuccess] = useState('');
+  const [isOpeningWhatsapp, setIsOpeningWhatsapp] = useState(false);
+  const contactSuccessTimeoutRef = useRef(null);
+  const whatsappButtonTimeoutRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -172,11 +177,58 @@ function App() {
     return undefined;
   }, []);
 
+  useEffect(() => {
+    return () => {
+      clearTimeout(contactSuccessTimeoutRef.current);
+      clearTimeout(whatsappButtonTimeoutRef.current);
+    };
+  }, []);
+
   const closeMenu = () => setMenuOpen(false);
   const whatsappMessage = encodeURIComponent(
     'Hola, encontré su sitio web en Google y me gustaría recibir más información sobre sus servicios.'
   );
   const whatsappUrl = `https://wa.me/5218125838187?text=${whatsappMessage}`;
+
+  const handleContactSubmit = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    const formData = new FormData(form);
+    const nombre = formData.get('nombre')?.trim() || '';
+    const telefono = formData.get('telefono')?.trim() || '';
+    const email = formData.get('email')?.trim() || '';
+    const mensaje = formData.get('mensaje')?.trim() || '';
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!nombre || !telefono || !email || !mensaje) {
+      setContactError('Por favor completa todos los campos obligatorios.');
+      setContactSuccess('');
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      setContactError('Por favor ingresa un correo electrónico válido.');
+      setContactSuccess('');
+      return;
+    }
+
+    const text = encodeURIComponent(
+      `Hola, quiero solicitar información sobre un proyecto.\n\nNombre: ${nombre}\nTeléfono: ${telefono}\nCorreo: ${email}\nMensaje: ${mensaje}`
+    );
+    const url = `https://wa.me/528125838187?text=${text}`;
+
+    setContactError('');
+    setContactSuccess('Información enviada correctamente. Te abrimos WhatsApp para continuar.');
+    setIsOpeningWhatsapp(true);
+    window.open(url, "_blank");
+    form.reset();
+
+    clearTimeout(contactSuccessTimeoutRef.current);
+    clearTimeout(whatsappButtonTimeoutRef.current);
+    contactSuccessTimeoutRef.current = setTimeout(() => setContactSuccess(''), 5000);
+    whatsappButtonTimeoutRef.current = setTimeout(() => setIsOpeningWhatsapp(false), 1000);
+  };
 
   return (
     <>
@@ -225,7 +277,7 @@ function App() {
           <p className="hero-sub reveal">Desarrollamos proyectos industriales, comerciales y urbanos con calidad, puntualidad y compromiso en cada etapa.</p>
           <div className="hero-btns reveal">
             <a href="#servicios" className="btn-primary" aria-label="Ver servicios de EDIFICA">Ver servicios</a>
-            <a href="#contacto" className="btn-outline" aria-label="Contactar a EDIFICA">Contáctanos</a>
+            <a href="#agendar" className="btn-outline" aria-label="Contactar a EDIFICA">AGENDAR CITA</a>
           </div>
         </div>
 
@@ -408,27 +460,32 @@ function App() {
               <ContactDetail label="Dirección" value="Av. Constitución 450, Monterrey, N.L." icon="pin" />
             </div>
           </div>
-          <div className="contact-form reveal-right">
+          <form className="contact-form reveal-right" onSubmit={handleContactSubmit} noValidate>
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="nombre">Nombre completo</label>
-                <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autoComplete="name" />
+                <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autoComplete="name" required />
               </div>
               <div className="form-group">
                 <label htmlFor="telefono">Teléfono</label>
-                <input id="telefono" name="telefono" type="tel" placeholder="(81) 0000-0000" autoComplete="tel" />
+                <input id="telefono" name="telefono" type="tel" placeholder="(81) 0000-0000" autoComplete="tel" required />
               </div>
             </div>
             <div className="form-group">
               <label htmlFor="email">Correo electrónico</label>
-              <input id="email" name="email" type="email" placeholder="tu@empresa.com" autoComplete="email" />
+              <input id="email" name="email" type="email" placeholder="tu@empresa.com" autoComplete="email" required />
             </div>
             <div className="form-group">
               <label htmlFor="mensaje">Mensaje</label>
-              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos sobre tu proyecto..." required></textarea>
             </div>
-            <button className="form-submit" type="button" onClick={() => alert('¡Mensaje enviado! Nos pondremos en contacto pronto.')}>Enviar mensaje</button>
-          </div>
+            <button className="form-submit" type="submit">
+              {isOpeningWhatsapp ? 'Abriendo WhatsApp...' : 'Enviar por WhatsApp'}
+            </button>
+            <p className="form-helper">Te redirigiremos a WhatsApp para continuar la conversación.</p>
+            {contactSuccess && <p className="form-success" role="status">{contactSuccess}</p>}
+            {contactError && <p className="form-error" role="alert">{contactError}</p>}
+          </form>
         </div>
       </section>
 

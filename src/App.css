@@ -192,6 +192,9 @@ body{font-family:var(--font-body);color:var(--text);background:#fff;overflow-x:h
 .form-group textarea{resize:vertical;min-height:120px}
 .form-submit{width:100%;background:var(--navy);color:#fff;padding:18px;font-family:var(--font-body);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;transition:all .25s;clip-path:polygon(0 0,100% 0,100% 80%,98% 100%,0 100%)}
 .form-submit:hover{background:var(--accent)}
+.form-helper{font-size:13px;color:var(--text2);line-height:1.5;margin-top:12px;text-align:center}
+.form-success{font-size:13px;font-weight:600;color:#1f8f4d;line-height:1.5;margin-top:10px;text-align:center}
+.form-error{font-size:13px;font-weight:600;color:var(--accent2);line-height:1.5;margin-top:10px;text-align:center}
 
 .footer{background:var(--navy);padding:60px 5% 30px;border-top:1px solid rgba(255,255,255,.06)}
 .footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:50px;padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,.06)}
