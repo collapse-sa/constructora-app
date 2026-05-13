@@ -16,10 +16,10 @@
   --font-body:'Barlow',sans-serif;
   --font-cond:'Barlow Condensed',sans-serif;
 }
-html{scroll-behavior:smooth;width:100%;max-width:100%;overflow-x:hidden;overflow-y:auto}
-body{font-family:var(--font-body);color:var(--text);background:#fff;width:100%;max-width:100%;overflow-x:hidden;overflow-y:auto}
+html{scroll-behavior:smooth;width:100%;max-width:100%;overflow-x:clip;overflow-y:visible}
+body{font-family:var(--font-body);color:var(--text);background:#fff;width:100%;max-width:100%;min-height:100%;overflow-x:clip;overflow-y:auto}
 body.menu-open{overflow:hidden}
-#root,.app,main{width:100%;max-width:100%;min-height:100%;overflow-x:clip;overflow-y:visible}
+#root,.app,main{width:100%;max-width:100%;min-height:100%;overflow:visible}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#111}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
@@ -331,17 +331,19 @@ body.menu-open{overflow:hidden}
 
 @media(max-width:768px){
   *{box-sizing:border-box}
-  html,body{overflow-x:clip;overflow-y:auto}
+  html{overflow-x:clip;overflow-y:visible}
+  body{overflow-x:clip;overflow-y:auto}
+  #root,.app,main{overflow:visible}
   img,iframe,.calendly-inline-widget{max-width:100%}
   section,.container,.hero,.navbar,.footer{max-width:100%}
-  .mobile-menu,.hero-video,.hero-overlay,.hero-content,.hero-stats,.services-grid,.projects-grid,.contact-inner,.schedule-inner,.footer-top{max-width:100%;overflow-x:clip;overflow-y:visible}
+  .mobile-menu,.hero-video,.hero-overlay,.hero-content,.hero-stats,.services-grid,.projects-grid,.contact-inner,.schedule-inner,.footer-top{max-width:100%}
   .schedule-calendly,.schedule-calendly iframe,.schedule-calendly .calendly-inline-widget{min-width:0;min-height:720px;height:720px;width:100%;max-width:100%}
 }
 
-@media(max-width:390px){
+@media(max-width:430px){
   .nav-inner{height:68px}
   .mobile-menu{top:68px}
-  .hero{height:100svh;min-height:667px;align-items:flex-start;padding-bottom:122px}
+  .hero{height:auto;min-height:100svh;align-items:flex-start;flex-direction:column;padding-bottom:92px}
   .hero-content{padding:92px 6% 0;max-width:none}
   .hero-badge{font-size:9px;letter-spacing:1.2px;padding:6px 9px;margin-bottom:16px;gap:6px}
   .hero-badge::before{width:6px;height:6px}
@@ -349,12 +351,13 @@ body.menu-open{overflow:hidden}
   .hero-sub{font-size:13.5px;line-height:1.45;margin-bottom:18px;max-width:100%}
   .hero-btns{gap:10px}
   .hero .btn-primary,.hero .btn-outline{width:100%;padding:13px 22px;font-size:12px}
-  .hero-stats{left:6%;right:76px;bottom:82px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px;padding-top:14px}
+  .hero-stats{position:relative;left:auto;right:auto;bottom:auto;width:calc(100% - 12%);margin:34px 6% 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;padding-top:18px}
   .hero-stat{gap:8px;align-items:flex-start}
   .hero-stat-num{font-size:27px}
   .hero-stat-label{font-size:10px;line-height:1.15;letter-spacing:.7px}
   .wa-btn{width:48px;height:48px;right:14px;bottom:14px}
   .wa-btn svg{width:25px;height:25px}
+  ::-webkit-scrollbar{width:0;height:0}
 }
 
 @media (prefers-reduced-motion: reduce){
