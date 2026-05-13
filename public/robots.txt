@@ -1,3 +1,5 @@
-# https://www.robotstxt.org/robotstxt.html
+# TODO: actualizar https://tudominio.com/ por el dominio real al publicar.
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://tudominio.com/sitemap.xml
