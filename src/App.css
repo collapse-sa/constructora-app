@@ -105,18 +105,19 @@ body{font-family:var(--font-body);color:var(--text);background:#fff;overflow-x:h
 
 .services{padding:100px 5%;background:var(--gray)}
 .services-header{text-align:center;margin-bottom:60px}
-.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.service-card{background:#fff;position:relative;overflow:hidden;cursor:pointer;transition:transform .35s ease,box-shadow .35s ease}
-.service-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(11,21,39,.15)}
-.service-card-img{height:220px;overflow:hidden;background:var(--navy)}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;align-items:stretch}
+.service-card{background:#fff;position:relative;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;height:100%;opacity:0;transform:translateY(35px);transition:opacity .7s ease,transform .7s ease,box-shadow .35s ease}
+.service-card.is-visible{opacity:1;transform:translateY(0)}
+.service-card.is-visible:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(11,21,39,.15);transition-delay:0ms}
+.service-card-img{height:220px;overflow:hidden;background:var(--navy);flex-shrink:0}
 .service-card-img img,.service-card-img .image-fallback{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
 .service-card:hover .service-card-img img{transform:scale(1.08)}
-.service-card-body{padding:28px 24px}
+.service-card-body{padding:28px 24px;display:flex;flex-direction:column;flex:1}
 .service-icon{width:48px;height:48px;background:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:16px;clip-path:polygon(0 0,100% 0,100% 78%,88% 100%,0 100%)}
 .service-icon svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2}
 .service-card h3{font-family:var(--font-cond);font-size:22px;font-weight:700;letter-spacing:1px;color:var(--navy);margin-bottom:10px;text-transform:uppercase}
 .service-card p{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:20px}
-.service-link{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.service-link{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:8px;margin-top:auto}
 .service-link::after{content:'→';transition:transform .2s}
 .service-card:hover .service-link::after{transform:translateX(4px)}
 .service-card-num{position:absolute;top:16px;right:16px;font-family:var(--font-display);font-size:48px;color:rgba(11,21,39,.06);line-height:1;pointer-events:none}
@@ -183,6 +184,8 @@ body{font-family:var(--font-body);color:var(--text);background:#fff;overflow-x:h
 .contact-detail-icon svg{width:18px;height:18px;fill:none;stroke:var(--accent);stroke-width:2}
 .contact-detail-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:2px}
 .contact-detail-val{font-size:15px;font-weight:600;color:var(--navy)}
+.contact-link{color:inherit;text-decoration:none;display:inline-block;transition:color .3s ease,transform .3s ease,text-shadow .3s ease}
+.contact-link:hover{color:var(--accent);transform:translateX(2px);text-shadow:0 8px 18px rgba(255,107,26,.18)}
 .contact-form{background:#fff;padding:48px;box-shadow:0 20px 60px rgba(11,21,39,.08)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}

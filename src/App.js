@@ -149,6 +149,41 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const serviceCards = document.querySelectorAll('.service-card');
+    const delayTimeouts = [];
+
+    if (!('IntersectionObserver' in window)) {
+      serviceCards.forEach((card) => card.classList.add('is-visible'));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const delay = Number(entry.target.dataset.delay) || 0;
+          entry.target.classList.add('is-visible');
+          const delayTimeout = setTimeout(() => {
+            entry.target.style.transitionDelay = '0ms';
+          }, delay + 700);
+          delayTimeouts.push(delayTimeout);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+
+    serviceCards.forEach((card, index) => {
+      const delay = index * 120;
+      card.dataset.delay = String(delay);
+      card.style.transitionDelay = `${delay}ms`;
+      observer.observe(card);
+    });
+    return () => {
+      observer.disconnect();
+      delayTimeouts.forEach((delayTimeout) => clearTimeout(delayTimeout));
+    };
+  }, []);
+
+  useEffect(() => {
     let exitTimeout;
     const interval = setInterval(() => {
       setAboutBadgeLeaving(true);
@@ -351,7 +386,7 @@ function App() {
         </div>
         <div className="services-grid">
           {services.map((service) => (
-            <div className="service-card reveal" key={service.num}>
+            <div className="service-card" key={service.num}>
               <div className="service-card-num">{service.num}</div>
               <div className="service-card-img">
                 <ImageWithFallback src={service.img} alt={service.alt} />
@@ -455,8 +490,8 @@ function App() {
             <h2>¿Tienes un <span>proyecto</span> en mente?</h2>
             <p>Cuéntanos sobre tu proyecto y uno de nuestros especialistas se pondrá en contacto contigo en menos de 24 horas.</p>
             <div className="contact-details">
-              <ContactDetail label="Teléfono" value="(81) 2583-8187" icon="phone" />
-              <ContactDetail label="Correo electrónico" value="contacto@edifica.mx" icon="mail" />
+              <ContactDetail label="Teléfono" value="(81) 2583-8187" icon="phone" href="tel:+528125838187" ariaLabel="Llamar a Edifica" />
+              <ContactDetail label="Correo electrónico" value="contacto@edifica.mx" icon="mail" href="mailto:contacto@edifica.mx" ariaLabel="Enviar correo a Edifica" />
               <ContactDetail label="Dirección" value="Av. Constitución 450, Monterrey, N.L." icon="pin" />
             </div>
           </div>
@@ -524,7 +559,7 @@ function App() {
   );
 }
 
-function ContactDetail({ label, value, icon }) {
+function ContactDetail({ label, value, icon, href, ariaLabel }) {
   const icons = {
     phone: <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.22 2.38a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />,
     mail: <><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></>,
@@ -538,7 +573,13 @@ function ContactDetail({ label, value, icon }) {
       </div>
       <div>
         <div className="contact-detail-label">{label}</div>
-        <div className="contact-detail-val">{value}</div>
+        <div className="contact-detail-val">
+          {href ? (
+            <a className="contact-link" href={href} aria-label={ariaLabel}>
+              {value}
+            </a>
+          ) : value}
+        </div>
       </div>
     </div>
   );
