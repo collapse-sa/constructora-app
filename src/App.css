@@ -16,13 +16,39 @@
   --font-body:'Barlow',sans-serif;
   --font-cond:'Barlow Condensed',sans-serif;
 }
-html{scroll-behavior:smooth;width:100%;max-width:100%;overflow-x:clip;overflow-y:visible}
-body{font-family:var(--font-body);color:var(--text);background:#fff;width:100%;max-width:100%;min-height:100%;overflow-x:clip;overflow-y:auto}
-body.menu-open{overflow:hidden}
-#root,.app,main{width:100%;max-width:100%;min-height:100%;overflow:visible}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:#111}
-::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+html{
+  width:100%;
+  max-width:100%;
+  scroll-behavior:smooth;
+}
+body{
+  font-family:var(--font-body);
+  color:var(--text);
+  background:#fff;
+  width:100%;
+  max-width:100%;
+  min-height:100%;
+}
+body.menu-open{
+  overflow:hidden;
+  touch-action:none;
+}
+#root,
+.app,
+main{
+  width:100%;
+  max-width:100%;
+  min-height:100%;
+  overflow:visible;
+}
+.site-wrapper{
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+}
+@supports not (overflow: clip){
+  .site-wrapper{overflow-x:hidden}
+}
 .reveal,.reveal-left,.reveal-right,.reveal-zoom,.fade-up{opacity:0;transition:opacity .8s ease,transform .8s ease;will-change:opacity,transform}
 .reveal,.fade-up{transform:translateY(36px)}
 .reveal-left{transform:translateX(-36px)}
@@ -331,9 +357,6 @@ body.menu-open{overflow:hidden}
 
 @media(max-width:768px){
   *{box-sizing:border-box}
-  html{overflow-x:clip;overflow-y:visible}
-  body{overflow-x:clip;overflow-y:auto}
-  #root,.app,main{overflow:visible}
   img,iframe,.calendly-inline-widget{max-width:100%}
   section,.container,.hero,.navbar,.footer{max-width:100%}
   .mobile-menu,.hero-video,.hero-overlay,.hero-content,.hero-stats,.services-grid,.projects-grid,.contact-inner,.schedule-inner,.footer-top{max-width:100%}
@@ -357,7 +380,6 @@ body.menu-open{overflow:hidden}
   .hero-stat-label{font-size:10px;line-height:1.15;letter-spacing:.7px}
   .wa-btn{width:48px;height:48px;right:14px;bottom:14px}
   .wa-btn svg{width:25px;height:25px}
-  ::-webkit-scrollbar{width:0;height:0}
 }
 
 @media (prefers-reduced-motion: reduce){
